@@ -1,0 +1,44 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+const int MASK = (1 << 12) - 1;   // 12位全1掩码
+//创造n位全1码（1<<n)-1
+int main() {
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+
+    int T;
+    cin >> T;
+    while (T--) {
+        int o, x, p;
+        cin >> o >> x >> p;
+
+        int ans = 0;
+        switch (o) {
+            case 1: // 整体左移 p 位，保留低12位
+                ans = (x << p) & MASK;
+                break;
+            case 2: // 整体右移 p 位，高位补1
+                // 右移后低 (12-p) 位为 x>>p，高 p 位全1
+                ans = (x >> p) | (((1 << p) - 1) << (12 - p));
+                 //（(1<<p)-1)生成p位1
+                 //例  x=1,移动3位，1000-1=7=（0111）
+                 // <<12-p->左移12-p位，只有高位留1才保留
+               
+                // 结果自动不超过12位，但加掩码更安全
+                ans &= MASK;
+                break;
+            case 3: // 第 p 位赋 0
+                ans = x & ~(1 << p);
+                break;
+           //&全1为1
+           //1<<p 生成1＋p位0
+           // 取反后，只有第p位为0，&后只有他为0
+            case 4: // 第 p 位赋 1
+                ans = x | (1 << p);
+                break;
+        }
+        cout << ans << '\n';
+    }
+    return 0;
+}
